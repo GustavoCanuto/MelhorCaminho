@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+Nome de todos os integrantes do grupo: Gustavo Canuto, Iago diniz, David Marao e Vinicius Blancato
+
+Descrição do problema escolhido: Facilitar na decisão para escolher melhor transporte na entrega de um produto, fornecendo
+informações de gasto de litros de carro e moto, e calorias gasta usando bicicleta e caminhando.
+
+Descrição breve do funcionamento do algoritmo: Para acessar o sistema vai ser necessario inserir uma senha, que enquanto 
+a senha estiver incorreta vai ficar exibindo a mensagem solicitando a senha, após digitar a senha correta vai surgir um formulario
+que vai pedir endereço da loja e endereço do cliente, após fornecer essas informações ele vai fazer uma recomendação e mostrar inforções de gasto de caloria ou litros gastado para aquele meio de transporte.
+
+
+Variaveis de entrada: 
+cepEndereco1: vai armazenar o cep da loja
+cepEndereco2: vai armazenar o cep do cliente 
+ruaEndereco1: vai armazenar nome da rua da loja 
+ruaEndereco2: vai armazenar nome da rua do cliente 
+numeroEndereco1: vai armazenar numero da local da loja  
+numeroEndereco2: vai armazenar numero da local do cliente 
+bairroEndereco1: vai armazenar bairro da loja
+ bairroEndereco2: vai armazenar bairro do cliente
+ cidadeEndereco1: vai armazenar cidade do cliente  
+ cidadeEndereco2: vai armazenar cidade do cliente
+essas variaveis são todas retiradas do formulario html e colocadas dentro das variaveis endereço1 e endereço2
+
+dados[]: vai amarzenar os campos do formuario de nome nomeLoja e nomeCliente são colocados no vetor dados e usados posteriormente
+
+password: a variavel password é utilizada em um loop aonde valida a senha até o input dela estar correto
+
+cepInputLoja: recebe cep digitado fa loja para realizar busca do endereço na api
+cepLoja: formata o cep digitado da loja para um modo que seja possivel realizar a busca na api
+validacep: verifica se o cep foi digitado de forma valida, sem letras 
+
+cepInputCliente: recebe cep digitado do cliente para realizar busca do endereço na api
+cepCliente: formata o cep digitado do cliente para um modo que seja possivel realizar a busca na api
+
+-->
+
+<!--
+Variaveis de saida:
+distanciape: vai exibir a distancia a pé em km 
+distanciabike : vai exibir a distancia de bicicleta em km 
+ distanciacarro : vai exibir a distancia de carro em km 
+ são variaveis retiradas da Api que determinam a distancia da rota dependendo do metodo de transporte
+
+distanciaMetrospe :vai exibir a distancia a pé em metros
+distanciaMetrosbike :vai exibir a distancia de bicicleta em metros
+ são as variaveis de distancia covertidas para metros
+
+calPe : vai exibir caloria gasta a pé
+calBike : vai exibir caloria gasta por bicicleta
+são variaveis que ao multiplicar pela distancia determinam a quantidade de calorias que seriam queimadas no percurso dependendo do metodo de transorte
+
+gasCarro : vai exibir litros gasto por carro
+gasMoto : vai exibir litros gasto por moto
+funcionam similarmente as variaveis anteriores determinando a quantidade me litros gastada dependendo do metodo de transporte
+
+locais: vai mostra mensagem informando que nome da loja até nome do cliente a distancia é 
+-->
+
+<!--
+Variaveis de processamento:
+apikey: a variavel apikey é utilizada para poder acessar a api de calculo de distancia
+
+endereco1 :  junção de varias variaveis de input do endereço da loja que formam o endereço para o uso na api
+endereco2 : junção de varias variaveis de input do endereço do cliente que formam o endereço para o uso na api
+as variaveis endereço1 e endereço2 são a junção de varias variaveis de input que formam o endereço para o uso na api
+
+distNumCarro: recebe distancia carro transformada em float
+distNumBike: recebe distancia bicicleta transformada em float
+distNumPe: recebe distancia a pé transformada em float
+as variaveis distNumCarro, distNumBike e distNumPe são apenas as variaveis de disancia tranformadas em float
+
+resultado: é uma variavel que armazena a div resultado para o uso em escrever os resultados do algoritimo
+
+urlcarro :recebe busca da api com dados de endereço fornecido, pela rota de carro
+urlpe  :recebe busca da api com dados de endereço fornecido, pela rota a pé
+urlbike  :recebe busca da api com dados de endereço fornecido, pela rota de bicicleta
+   
+responsecarro: recebe a respota da api na urlcarro fornecida usando a função fetch
+datacarro : recebe a respota da api pela responsecarro em forma JSON
+
+responsepe: recebe a respota da api na urlpe fornecida usando a função fetch
+datape : recebe a respota da api pela responsepe em forma JSON
+
+responsebike: recebe a respota da api na urlbike fornecida usando a função fetch
+databike : recebe a respota da api pela responsebike em forma JSON
+          
+-->
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de melhor veiculo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="estilo.css">
+
+</head>
+<body>
+     
+        <form>
+            <br>
+            <h1>Melhor Transporte</h1>
+            <div class="content">
+                <h2>Dados da Loja</h2>
+                <br>
+                <input type="text" id="Nomeloja" class="form-label" placeholder="Insira o nome da loja" name="Nomeloja" minlength="3" maxlength="50">
+                <span class="span-required"></span>
+
+                <h3 style="text-align: center; color: gray;"> Endereço Loja </h3> 
+                <br>
+               
+                <fieldset>
+                 <p><label for="cepLoja" class="form-label"></label> 
+                <input type="text" class="form-label" id="cepLoja" placeholder="Digite o CEP da loja" oninput="buscaCepLoja();" required>
+                <span class="span-required"></span></p>
+                
+                
+                 <p style="text-align: center; color: rgba(105, 105, 105, 0.473);">______________________ou______________________</p>
+                
+                 <br>
+                <p><label for="cidadeLoja" class="form-label"></label>
+                <input type="text" class="form-label" placeholder="Digite a Cidade" name ="cidadeLoja" id="cidadeLoja" required>
+                <span class="span-required">............</span> </p>
+                
+                
+                <p><label for="bairroLoja" class="form-label"></label> 
+                <input type="text" class="form-label" placeholder="Digite o Bairro" required name="bairroLoja" id="bairroLoja" > 
+                <span class="span-required">............</span></p>
+                  
+
+                <label for="ruaLoja" class="form-label"></label>
+                <input type="text" class="form-label" placeholder="Digite o nome da Rua" name="ruaLoja" id="ruaLoja" required>
+                <span class="span-required">............</span>
+                
+
+                <label for="numeroLoja" class="form-label"> </label>
+                <input type="number" class="form-label" placeholder="Número" name="numeroLoja" id="numeroLoja" min="1" max="99999" required>
+                <span class="span-required">............</span>
+                
+                
+                
+                
+                    </fieldset>
+        </div>
+        <br><br>
+         
+       
+        <form>
+            <div class="content">
+                <h2>Dados do Cliente</h2>
+
+                 <br>
+                <input type="text" id="NomeCliente" placeholder="Digite seu nome" class="form-label" name="NomeCliente" minlength="3" maxlength="50">
+
+                <br>
+                <input type="text" id="Obs" placeholder="Observações" class="form-label" name="Obs"  maxlength="50">
+
+                <h3 style="text-align: center; color: gray;"> Endereço Cliente </h3> 
+                <br>
+            
+                <fieldset>
+
+                <p><label for="cepCliente" class="form-label"></label> 
+                <input type="text" class="form-label" placeholder="Digite o seu CEP local" name="cepCliente" id="cepCliente" oninput="buscaCepCliente();" required>
+                <span class="span-required"></span></p>
+                
+                <p style="text-align: center; color: rgba(105, 105, 105, 0.473);">______________________ou______________________</p>
+                       <br>
+
+                <p><label for="cidade" class="form-label"></label>
+                <input type="text" class="form-label" placeholder="Digite o nome da Cidade" name ="cidadeCliente" id="cidadeCliente" required> 
+                <span class="span-required"></span></p>
+
+                <p><label for="bairroCliente" class="form-label"></label> 
+                <input type="text" class="form-label" placeholder="Digite o Bairro" required name="bairroCliente" id="bairroCliente" > 
+                <span class="span-required"></span></p>
+
+                <label for="ruaCliente" class="form-label"></label>
+                <input type="text" class="form-label" placeholder="Digite a Rua" name="ruaCliente" id="ruaCliente" required>
+                <span class="span-required"></span>
+                
+                <label for="numeroCliente" class="form-label"></label>
+                <input type="number" class="form-label" placeholder="Número" name="numeroCliente" id="numeroCliente" min="1" max="99999" required>
+                <span class="span-required"></span>
+                
+                </fieldset>
+                <button type="button" id="BotaoVerificar" onclick="calcularDistancia() ;">Verificar</button>
+                
+    
+            </div>   
+           </fieldset>
+           <br>
+           <br>
+           <div id="resultado"></div>
+
+    <script>
+        
+ var password = "";
+while (password!="123"){
+    password = window.prompt("Qual é a senha?")
+}
+
+function buscaCepLoja() { 
+    let cepInputLoja = document.getElementById('cepLoja');
+    let cepLoja = cepInputLoja.value.replace(/\D/g, '');
+    let validacep = /^[0-9]{8}$/;
+    
+    if(cepLoja != "" && validacep.test(cepLoja)) {
+        $('#ruaLoja').val('...');
+        $('#bairroLoja').val('...');
+        $('#cidadeLoja').val('...');
+      
+        //busca e preenche as informações 
+        $.getJSON(`https://viacep.com.br/ws/${cepLoja}/json/?callback=?`, function (data) {
+            if(!('erro' in data)) {
+                $('#ruaLoja').val(data.logradouro);
+                $('#bairroLoja').val(data.bairro);
+                $('#cidadeLoja').val(data.localidade);
+
+                cepInputLoja.setCustomValidity('');
+            } else {
+                limpaForm();
+                cepInputLoja.setCustomValidity('CEP não encontrado!');
+            }
+        });
+    } else {
+        limpaFormLoja();
+        cepInputLoja.setCustomValidity('CEP inválido!');
+    }
+}
+
+function limpaFormLoja() {
+    $('#ruaLoja').val('');
+    $('#bairroLoja').val('');
+    $('#cidadeLoja').val('');
+}
+
+function buscaCepCliente() { 
+    let cepInputCliente = document.getElementById('cepCliente');
+    let cepCliente = cepInputCliente.value.replace(/\D/g, '');
+    let validacep = /^[0-9]{8}$/;
+    
+    if(cepCliente != "" && validacep.test(cepCliente)) {
+        $('#ruaCliente').val('...');
+        $('#bairroCliente').val('...');
+        $('#cidadeCliente').val('...');
+      
+        //busca e preenche as informações 
+        $.getJSON(`https://viacep.com.br/ws/${cepCliente}/json/?callback=?`, function (data) {
+            if(!('erro' in data)) {
+                $('#ruaCliente').val(data.logradouro);
+                $('#bairroCliente').val(data.bairro);
+                $('#cidadeCliente').val(data.localidade);
+
+                cepInputCliente.setCustomValidity('');
+            } else {
+                limpaForm();
+                cepInputCliente.setCustomValidity('CEP não encontrado!');
+            }
+        });
+    } else {
+        limpaFormCliente();
+        cepInputCliente.setCustomValidity('CEP inválido!');
+    }
+}
+
+function limpaFormCliente() {
+    $('#ruaCliente').val('');
+    $('#bairroCliente').val('');
+    $('#cidadeCliente').val('');
+}
+
+
+    function calcularDistancia() {
+        let cepEndereco1 = document.getElementById("cepLoja").value;
+        let ruaEndereco1 = document.getElementById("ruaLoja").value;
+        let numeroEndereco1 = document.getElementById("numeroLoja").value;
+        let bairroEndereco1 = document.getElementById("bairroLoja").value;
+        let cidadeEndereco1 = document.getElementById("cidadeLoja").value;
+        let cepEndereco2 = document.getElementById("cepCliente").value;
+        let ruaEndereco2 = document.getElementById("ruaCliente").value;
+        let numeroEndereco2 = document.getElementById("numeroCliente").value;
+        let bairroEndereco2 = document.getElementById("bairroCliente").value;
+        let cidadeEndereco2 = document.getElementById("cidadeCliente").value;
+        const apiKey = "uytabsN3MzIxmDwT65aanufpiyjT3ZvO";
+        let endereco1 = numeroEndereco1 +" "+ ruaEndereco1 + " "+ cidadeEndereco1+ " " + cepEndereco1;
+        let endereco2 = numeroEndereco2 +" "+ ruaEndereco2 + " "+ cidadeEndereco2+ " " + cepEndereco2;
+        var calPe = 15;
+        var calBike = 10;
+        var gasMoto = 0.025;
+        var gasCarro = 0.1;
+        var dados = [];
+        var Locais = "";
+
+    dados.push(
+            document.getElementById("Nomeloja").value,
+            document.getElementById("NomeCliente").value,
+            document.getElementById("Obs").value
+        );
+
+        
+        async function obterDistancia(enderecoOrigem, enderecoDestino) {
+
+          let urlcarro = `https://www.mapquestapi.com/directions/v2/route?key=${apiKey}&from=${enderecoOrigem}&to=${enderecoDestino}&outFormat=json&routeType=car&unit=k`;//ok
+          let urlpe = `https://www.mapquestapi.com/directions/v2/route?key=${apiKey}&from=${enderecoOrigem}&to=${enderecoDestino}&outFormat=json&routeType=pedestrian&unit=k`;//ok
+          let urlbike = `https://www.mapquestapi.com/directions/v2/route?key=${apiKey}&from=${enderecoOrigem}&to=${enderecoDestino}&outFormat=json&routeType=bicycle&unit=k`;//ok
+          
+          try {
+
+          let responsecarro = await fetch(urlcarro);//ok
+          let datacarro = await responsecarro.json();//ok
+    
+          let distanciacarro = datacarro.route.distance;
+          distNumCarro = parseFloat(distanciacarro);
+
+          let responsepe = await fetch(urlpe);//ok 
+          let datape = await responsepe.json();//ok
+    
+          let distanciape = datape.route.distance;
+          distNumPe = parseFloat(distanciape);
+
+          let responsebike = await fetch(urlbike);//ok
+          let databike = await responsebike.json();//ok
+    
+          let distanciabike = databike.route.distance;
+          distNumBike = parseFloat(distanciabike);
+    
+          let distanciaMetrospe = Math.round(distanciape * 1000);
+          let distanciaMetrosbike = Math.round(distanciabike * 1000);
+
+
+          // Verificar se a distância é menor que 1km e mostrar em metros
+          if (distanciacarro < 1) {
+          
+            if(dados[0]!=""&&dados[1]!=""){
+                Locais = `A distância entre ${dados[0]} e ${dados[1]} é:<br>`;
+            }
+
+            let resultado = document.getElementById("resultado");
+            calBike = distNumBike  * calBike;
+            calPe = distNumPe  * calPe; 
+
+            
+            resultado.innerHTML =  `${Locais}` ;
+            resultado.innerHTML += `Distância por bicicleta: ${distanciaMetrosbike} metros<br>`;
+            resultado.innerHTML += `Distância a pé: ${distanciaMetrospe} metros<br>`;
+            resultado.innerHTML += `Recomendamos ir a pé<br>`;
+            resultado.innerHTML += `Você vai gastar ${calPe.toFixed(2)} calorias a pé<br>`;
+            resultado.innerHTML += `Você vai gastar ${calBike.toFixed(2)} calorias de bicicleta<br>`;
+
+  
+            }
+            else if(distanciacarro>1&&distanciacarro<5){
+
+                if(dados[0]!=""&&dados[1]!=""){
+                Locais = `A distância entre ${dados[0]} e ${dados[1]} é:<br>`;
+            }
+                let resultado = document.getElementById("resultado");
+                calBike = distNumBike  * calBike;
+                calPe = distNumPe  * calPe;
+
+                resultado.innerHTML = `${Locais}` ;
+                resultado.innerHTML += `Distância por bicicleta: ${distanciabike} Km<br>`;
+                resultado.innerHTML += `Distância a pé: ${distanciape} Km<br>`; 
+                resultado.innerHTML += `Recomendamos ir de bicicleta<br>`;
+                resultado.innerHTML += `Você vai gastar ${calBike.toFixed(2)} calorias de bicicleta<br>`;
+                resultado.innerHTML += `Você vai gastar ${calPe.toFixed(2)} calorias a pé<br>`;
+
+
+
+           
+            }
+          else if(distanciacarro<=10){
+            if(dados[0]!=""&&dados[1]!=""){
+                Locais = `A distância entre ${dados[0]} e ${dados[1]} é:<br>`;
+            }
+            let resultado = document.getElementById("resultado");
+            gasMoto = distNumCarro * gasMoto;
+            gasCarro = distNumCarro * gasCarro;
+
+            resultado.innerHTML = `${Locais}` ;
+            resultado.innerHTML += `Distância por carro: ${distanciacarro} km<br>`;
+            resultado.innerHTML += `Distância por moto: ${distanciacarro} km<br>`;
+            resultado.innerHTML += `Recomendamos ir de moto<br>`;
+            resultado.innerHTML += `Você vai gastar ${gasMoto.toFixed(2)} litros de gasolina de moto<br>`;
+            resultado.innerHTML += `Você vai gastar ${gasCarro.toFixed(2)} litros de gasolina de carro<br>`;
+
+        
+
+        }
+        else if(distanciacarro>10){
+            if(dados[0]!=""&&dados[1]!=""){
+                Locais = `A distância entre ${dados[0]} e ${dados[1]} é:<br>`;
+            }
+            let resultado = document.getElementById("resultado");
+            gasCarro = distNumCarro * gasCarro;
+            gasMoto = distNumCarro * gasMoto;
+
+            resultado.innerHTML = `${Locais}` ;    
+            resultado.innerHTML += `Distância por carro: ${distanciacarro} km<br>`;
+            resultado.innerHTML += `Distância por moto: ${distanciacarro} km<br>`;
+            resultado.innerHTML += `Recomendamos ir de carro<br>`;
+            resultado.innerHTML += `Você vai gastar ${gasCarro.toFixed(2)} litros de gasolina de carro<br>`;
+            resultado.innerHTML += `Você vai gastar ${gasMoto.toFixed(2)} litros de gasolina de moto<br>`;
+        
+        
+        }
+        else{
+            resultado.innerHTML = `Erro`;
+        }
+
+
+
+  } catch (error) {
+    console.log("Ocorreu um erro ao obter a distância:", error);
+    alert("Ocorreu um erro ao obter a distância:", error);
+  }
+
+}
+obterDistancia(endereco1, endereco2); 
+
+
+}
+    </script>
+</body>
+</html>
