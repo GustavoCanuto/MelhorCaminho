@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!--
 Nome de todos os integrantes do grupo: Gustavo Canuto, Iago diniz, David Marao e Vinicius Blancato
@@ -38,7 +39,7 @@ cepCliente: formata o cep digitado do cliente para um modo que seja possivel rea
 
 -->
 
-<!--
+    <!--
 Variaveis de saida:
 distanciape: vai exibir a distancia a pé em km 
 distanciabike : vai exibir a distancia de bicicleta em km 
@@ -60,7 +61,7 @@ funcionam similarmente as variaveis anteriores determinando a quantidade me litr
 locais: vai mostra mensagem informando que nome da loja até nome do cliente a distancia é 
 -->
 
-<!--
+    <!--
 Variaveis de processamento:
 apikey: a variavel apikey é utilizada para poder acessar a api de calculo de distancia
 
@@ -95,335 +96,129 @@ databike : recebe a respota da api pela responsebike em forma JSON
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de melhor veiculo</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="api.js"></script>
     <link rel="stylesheet" href="estilo.css">
 
 </head>
-<body>
-     
-        <form>
-            <br>
-            <h1>Melhor Transporte</h1>
-            <div class="content">
-                <h2>Dados da Loja</h2>
-                <br>
-                <input type="text" id="Nomeloja" class="form-label" placeholder="Insira o nome da loja" name="Nomeloja" minlength="3" maxlength="50">
-                <span class="span-required"></span>
 
-                <h3 style="text-align: center; color: gray;"> Endereço Loja </h3> 
+<body>
+
+    <form>
+        <br>
+        <h1>Melhor Transporte</h1>
+        <div class="content">
+            <h2>Dados da Loja</h2>
+            <br>
+            <input type="text" id="Nomeloja" class="form-label" placeholder="Insira o nome da loja" name="Nomeloja"
+                minlength="3" maxlength="50">
+            <span class="span-required"></span>
+
+            <h3 style="text-align: center; color: gray;"> Endereço Loja </h3>
+            <br>
+
+            <fieldset>
+                <p><label for="cepLoja" class="form-label"></label>
+                    <input type="text" class="form-label" id="cepLoja" placeholder="Digite o CEP da loja"
+                        oninput="buscaCepLoja();" required>
+                    <span class="span-required"></span>
+                </p>
+
+
+                <p style="text-align: center; color: rgba(105, 105, 105, 0.473);">
+                    ______________________ou______________________</p>
+
                 <br>
-               
-                <fieldset>
-                 <p><label for="cepLoja" class="form-label"></label> 
-                <input type="text" class="form-label" id="cepLoja" placeholder="Digite o CEP da loja" oninput="buscaCepLoja();" required>
-                <span class="span-required"></span></p>
-                
-                
-                 <p style="text-align: center; color: rgba(105, 105, 105, 0.473);">______________________ou______________________</p>
-                
-                 <br>
                 <p><label for="cidadeLoja" class="form-label"></label>
-                <input type="text" class="form-label" placeholder="Digite a Cidade" name ="cidadeLoja" id="cidadeLoja" required>
-                <span class="span-required">............</span> </p>
-                
-                
-                <p><label for="bairroLoja" class="form-label"></label> 
-                <input type="text" class="form-label" placeholder="Digite o Bairro" required name="bairroLoja" id="bairroLoja" > 
-                <span class="span-required">............</span></p>
-                  
+                    <input type="text" class="form-label" placeholder="Digite a Cidade" name="cidadeLoja"
+                        id="cidadeLoja" required>
+                    <span class="span-required">............</span>
+                </p>
+
+
+                <p><label for="bairroLoja" class="form-label"></label>
+                    <input type="text" class="form-label" placeholder="Digite o Bairro" required name="bairroLoja"
+                        id="bairroLoja">
+                    <span class="span-required">............</span>
+                </p>
+
 
                 <label for="ruaLoja" class="form-label"></label>
-                <input type="text" class="form-label" placeholder="Digite o nome da Rua" name="ruaLoja" id="ruaLoja" required>
+                <input type="text" class="form-label" placeholder="Digite o nome da Rua" name="ruaLoja" id="ruaLoja"
+                    required>
                 <span class="span-required">............</span>
-                
+
 
                 <label for="numeroLoja" class="form-label"> </label>
-                <input type="number" class="form-label" placeholder="Número" name="numeroLoja" id="numeroLoja" min="1" max="99999" required>
+                <input type="number" class="form-label" placeholder="Número" name="numeroLoja" id="numeroLoja" min="1"
+                    max="99999" required>
                 <span class="span-required">............</span>
-                
-                
-                
-                
-                    </fieldset>
+
+
+
+
+            </fieldset>
         </div>
         <br><br>
-         
-       
+
+
         <form>
             <div class="content">
                 <h2>Dados do Cliente</h2>
 
-                 <br>
-                <input type="text" id="NomeCliente" placeholder="Digite seu nome" class="form-label" name="NomeCliente" minlength="3" maxlength="50">
+                <br>
+                <input type="text" id="NomeCliente" placeholder="Digite seu nome" class="form-label" name="NomeCliente"
+                    minlength="3" maxlength="50">
 
                 <br>
-                <input type="text" id="Obs" placeholder="Observações" class="form-label" name="Obs"  maxlength="50">
+                <input type="text" id="Obs" placeholder="Observações" class="form-label" name="Obs" maxlength="50">
 
-                <h3 style="text-align: center; color: gray;"> Endereço Cliente </h3> 
+                <h3 style="text-align: center; color: gray;"> Endereço Cliente </h3>
                 <br>
-            
+
                 <fieldset>
 
-                <p><label for="cepCliente" class="form-label"></label> 
-                <input type="text" class="form-label" placeholder="Digite o seu CEP local" name="cepCliente" id="cepCliente" oninput="buscaCepCliente();" required>
-                <span class="span-required"></span></p>
-                
-                <p style="text-align: center; color: rgba(105, 105, 105, 0.473);">______________________ou______________________</p>
-                       <br>
+                    <p><label for="cepCliente" class="form-label"></label>
+                        <input type="text" class="form-label" placeholder="Digite o seu CEP local" name="cepCliente"
+                            id="cepCliente" oninput="buscaCepCliente();" required>
+                        <span class="span-required"></span>
+                    </p>
 
-                <p><label for="cidade" class="form-label"></label>
-                <input type="text" class="form-label" placeholder="Digite o nome da Cidade" name ="cidadeCliente" id="cidadeCliente" required> 
-                <span class="span-required"></span></p>
+                    <p style="text-align: center; color: rgba(105, 105, 105, 0.473);">
+                        ______________________ou______________________</p>
+                    <br>
 
-                <p><label for="bairroCliente" class="form-label"></label> 
-                <input type="text" class="form-label" placeholder="Digite o Bairro" required name="bairroCliente" id="bairroCliente" > 
-                <span class="span-required"></span></p>
+                    <p><label for="cidade" class="form-label"></label>
+                        <input type="text" class="form-label" placeholder="Digite o nome da Cidade" name="cidadeCliente"
+                            id="cidadeCliente" required>
+                        <span class="span-required"></span>
+                    </p>
 
-                <label for="ruaCliente" class="form-label"></label>
-                <input type="text" class="form-label" placeholder="Digite a Rua" name="ruaCliente" id="ruaCliente" required>
-                <span class="span-required"></span>
-                
-                <label for="numeroCliente" class="form-label"></label>
-                <input type="number" class="form-label" placeholder="Número" name="numeroCliente" id="numeroCliente" min="1" max="99999" required>
-                <span class="span-required"></span>
-                
+                    <p><label for="bairroCliente" class="form-label"></label>
+                        <input type="text" class="form-label" placeholder="Digite o Bairro" required
+                            name="bairroCliente" id="bairroCliente">
+                        <span class="span-required"></span>
+                    </p>
+
+                    <label for="ruaCliente" class="form-label"></label>
+                    <input type="text" class="form-label" placeholder="Digite a Rua" name="ruaCliente" id="ruaCliente"
+                        required>
+                    <span class="span-required"></span>
+
+                    <label for="numeroCliente" class="form-label"></label>
+                    <input type="number" class="form-label" placeholder="Número" name="numeroCliente" id="numeroCliente"
+                        min="1" max="99999" required>
+                    <span class="span-required"></span>
+
                 </fieldset>
                 <button type="button" id="BotaoVerificar" onclick="calcularDistancia() ;">Verificar</button>
-                
-    
-            </div>   
-           </fieldset>
-           <br>
-           <br>
-           <div id="resultado"></div>
-
-    <script>
-        
- var password = "";
-while (password!="123"){
-    password = window.prompt("Qual é a senha?")
-}
-
-function buscaCepLoja() { 
-    let cepInputLoja = document.getElementById('cepLoja');
-    let cepLoja = cepInputLoja.value.replace(/\D/g, '');
-    let validacep = /^[0-9]{8}$/;
-    
-    if(cepLoja != "" && validacep.test(cepLoja)) {
-        $('#ruaLoja').val('...');
-        $('#bairroLoja').val('...');
-        $('#cidadeLoja').val('...');
-      
-        //busca e preenche as informações 
-        $.getJSON(`https://viacep.com.br/ws/${cepLoja}/json/?callback=?`, function (data) {
-            if(!('erro' in data)) {
-                $('#ruaLoja').val(data.logradouro);
-                $('#bairroLoja').val(data.bairro);
-                $('#cidadeLoja').val(data.localidade);
-
-                cepInputLoja.setCustomValidity('');
-            } else {
-                limpaForm();
-                cepInputLoja.setCustomValidity('CEP não encontrado!');
-            }
-        });
-    } else {
-        limpaFormLoja();
-        cepInputLoja.setCustomValidity('CEP inválido!');
-    }
-}
-
-function limpaFormLoja() {
-    $('#ruaLoja').val('');
-    $('#bairroLoja').val('');
-    $('#cidadeLoja').val('');
-}
-
-function buscaCepCliente() { 
-    let cepInputCliente = document.getElementById('cepCliente');
-    let cepCliente = cepInputCliente.value.replace(/\D/g, '');
-    let validacep = /^[0-9]{8}$/;
-    
-    if(cepCliente != "" && validacep.test(cepCliente)) {
-        $('#ruaCliente').val('...');
-        $('#bairroCliente').val('...');
-        $('#cidadeCliente').val('...');
-      
-        //busca e preenche as informações 
-        $.getJSON(`https://viacep.com.br/ws/${cepCliente}/json/?callback=?`, function (data) {
-            if(!('erro' in data)) {
-                $('#ruaCliente').val(data.logradouro);
-                $('#bairroCliente').val(data.bairro);
-                $('#cidadeCliente').val(data.localidade);
-
-                cepInputCliente.setCustomValidity('');
-            } else {
-                limpaForm();
-                cepInputCliente.setCustomValidity('CEP não encontrado!');
-            }
-        });
-    } else {
-        limpaFormCliente();
-        cepInputCliente.setCustomValidity('CEP inválido!');
-    }
-}
-
-function limpaFormCliente() {
-    $('#ruaCliente').val('');
-    $('#bairroCliente').val('');
-    $('#cidadeCliente').val('');
-}
 
 
-    function calcularDistancia() {
-        let cepEndereco1 = document.getElementById("cepLoja").value;
-        let ruaEndereco1 = document.getElementById("ruaLoja").value;
-        let numeroEndereco1 = document.getElementById("numeroLoja").value;
-        let bairroEndereco1 = document.getElementById("bairroLoja").value;
-        let cidadeEndereco1 = document.getElementById("cidadeLoja").value;
-        let cepEndereco2 = document.getElementById("cepCliente").value;
-        let ruaEndereco2 = document.getElementById("ruaCliente").value;
-        let numeroEndereco2 = document.getElementById("numeroCliente").value;
-        let bairroEndereco2 = document.getElementById("bairroCliente").value;
-        let cidadeEndereco2 = document.getElementById("cidadeCliente").value;
-        const apiKey = "uytabsN3MzIxmDwT65aanufpiyjT3ZvO";
-        let endereco1 = numeroEndereco1 +" "+ ruaEndereco1 + " "+ cidadeEndereco1+ " " + cepEndereco1;
-        let endereco2 = numeroEndereco2 +" "+ ruaEndereco2 + " "+ cidadeEndereco2+ " " + cepEndereco2;
-        var calPe = 15;
-        var calBike = 10;
-        var gasMoto = 0.025;
-        var gasCarro = 0.1;
-        var dados = [];
-        var Locais = "";
+            </div>
+            </fieldset>
+            <br>
+            <br>
+            <div id="resultado"></div>
 
-    dados.push(
-            document.getElementById("Nomeloja").value,
-            document.getElementById("NomeCliente").value,
-            document.getElementById("Obs").value
-        );
-
-        
-        async function obterDistancia(enderecoOrigem, enderecoDestino) {
-
-          let urlcarro = `https://www.mapquestapi.com/directions/v2/route?key=${apiKey}&from=${enderecoOrigem}&to=${enderecoDestino}&outFormat=json&routeType=car&unit=k`;//ok
-          let urlpe = `https://www.mapquestapi.com/directions/v2/route?key=${apiKey}&from=${enderecoOrigem}&to=${enderecoDestino}&outFormat=json&routeType=pedestrian&unit=k`;//ok
-          let urlbike = `https://www.mapquestapi.com/directions/v2/route?key=${apiKey}&from=${enderecoOrigem}&to=${enderecoDestino}&outFormat=json&routeType=bicycle&unit=k`;//ok
-          
-          try {
-
-          let responsecarro = await fetch(urlcarro);//ok
-          let datacarro = await responsecarro.json();//ok
-    
-          let distanciacarro = datacarro.route.distance;
-          distNumCarro = parseFloat(distanciacarro);
-
-          let responsepe = await fetch(urlpe);//ok 
-          let datape = await responsepe.json();//ok
-    
-          let distanciape = datape.route.distance;
-          distNumPe = parseFloat(distanciape);
-
-          let responsebike = await fetch(urlbike);//ok
-          let databike = await responsebike.json();//ok
-    
-          let distanciabike = databike.route.distance;
-          distNumBike = parseFloat(distanciabike);
-    
-          let distanciaMetrospe = Math.round(distanciape * 1000);
-          let distanciaMetrosbike = Math.round(distanciabike * 1000);
-
-
-          // Verificar se a distância é menor que 1km e mostrar em metros
-          if (distanciacarro < 1) {
-          
-            if(dados[0]!=""&&dados[1]!=""){
-                Locais = `A distância entre ${dados[0]} e ${dados[1]} é:<br>`;
-            }
-
-            let resultado = document.getElementById("resultado");
-            calBike = distNumBike  * calBike;
-            calPe = distNumPe  * calPe; 
-
-            
-            resultado.innerHTML =  `${Locais}` ;
-            resultado.innerHTML += `Distância por bicicleta: ${distanciaMetrosbike} metros<br>`;
-            resultado.innerHTML += `Distância a pé: ${distanciaMetrospe} metros<br>`;
-            resultado.innerHTML += `Recomendamos ir a pé<br>`;
-            resultado.innerHTML += `Você vai gastar ${calPe.toFixed(2)} calorias a pé<br>`;
-            resultado.innerHTML += `Você vai gastar ${calBike.toFixed(2)} calorias de bicicleta<br>`;
-
-  
-            }
-            else if(distanciacarro>1&&distanciacarro<5){
-
-                if(dados[0]!=""&&dados[1]!=""){
-                Locais = `A distância entre ${dados[0]} e ${dados[1]} é:<br>`;
-            }
-                let resultado = document.getElementById("resultado");
-                calBike = distNumBike  * calBike;
-                calPe = distNumPe  * calPe;
-
-                resultado.innerHTML = `${Locais}` ;
-                resultado.innerHTML += `Distância por bicicleta: ${distanciabike} Km<br>`;
-                resultado.innerHTML += `Distância a pé: ${distanciape} Km<br>`; 
-                resultado.innerHTML += `Recomendamos ir de bicicleta<br>`;
-                resultado.innerHTML += `Você vai gastar ${calBike.toFixed(2)} calorias de bicicleta<br>`;
-                resultado.innerHTML += `Você vai gastar ${calPe.toFixed(2)} calorias a pé<br>`;
-
-
-
-           
-            }
-          else if(distanciacarro<=10){
-            if(dados[0]!=""&&dados[1]!=""){
-                Locais = `A distância entre ${dados[0]} e ${dados[1]} é:<br>`;
-            }
-            let resultado = document.getElementById("resultado");
-            gasMoto = distNumCarro * gasMoto;
-            gasCarro = distNumCarro * gasCarro;
-
-            resultado.innerHTML = `${Locais}` ;
-            resultado.innerHTML += `Distância por carro: ${distanciacarro} km<br>`;
-            resultado.innerHTML += `Distância por moto: ${distanciacarro} km<br>`;
-            resultado.innerHTML += `Recomendamos ir de moto<br>`;
-            resultado.innerHTML += `Você vai gastar ${gasMoto.toFixed(2)} litros de gasolina de moto<br>`;
-            resultado.innerHTML += `Você vai gastar ${gasCarro.toFixed(2)} litros de gasolina de carro<br>`;
-
-        
-
-        }
-        else if(distanciacarro>10){
-            if(dados[0]!=""&&dados[1]!=""){
-                Locais = `A distância entre ${dados[0]} e ${dados[1]} é:<br>`;
-            }
-            let resultado = document.getElementById("resultado");
-            gasCarro = distNumCarro * gasCarro;
-            gasMoto = distNumCarro * gasMoto;
-
-            resultado.innerHTML = `${Locais}` ;    
-            resultado.innerHTML += `Distância por carro: ${distanciacarro} km<br>`;
-            resultado.innerHTML += `Distância por moto: ${distanciacarro} km<br>`;
-            resultado.innerHTML += `Recomendamos ir de carro<br>`;
-            resultado.innerHTML += `Você vai gastar ${gasCarro.toFixed(2)} litros de gasolina de carro<br>`;
-            resultado.innerHTML += `Você vai gastar ${gasMoto.toFixed(2)} litros de gasolina de moto<br>`;
-        
-        
-        }
-        else{
-            resultado.innerHTML = `Erro`;
-        }
-
-
-
-  } catch (error) {
-    console.log("Ocorreu um erro ao obter a distância:", error);
-    alert("Ocorreu um erro ao obter a distância:", error);
-  }
-
-}
-obterDistancia(endereco1, endereco2); 
-
-
-}
-    </script>
 </body>
+
 </html>
